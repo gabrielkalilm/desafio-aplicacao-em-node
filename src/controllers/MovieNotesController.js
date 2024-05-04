@@ -7,20 +7,20 @@ class MovieNotesController {
     const { title, description, rating, movie_tags} = request.body;
     const { user_id } = request.params;
 
+    if(Number(rating) > 5){
+      throw new AppError("A nota do filme não pode ser maior que 5")
+    }
+  
+    if(Number(rating) < 1){
+      throw new AppError("A nota do filme não pode ser menor que 1")
+    }
+
     const [movie_notes_id] = await knex("movie_notes").insert({
       title,
       description,
       rating,
       user_id
   });
-
-  if(Number(rating) > 5){
-    throw new AppError("A nota do filme não pode ser maior que 5")
-  }
-
-  if(Number(rating) < 1){
-    throw new AppError("A nota do filme não pode ser menor que 1")
-  }
 
   const tagsInsert = movie_tags.map(name =>{
     return {
